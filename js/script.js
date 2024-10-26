@@ -1,78 +1,64 @@
+const ROCK = '🪨Rock';
+const PAPER = '📄Paper';
+const SCISSORS = '✂️Scissors';
+
+const gameRules = {
+    R: { R: "It's a tie!", P: `${PAPER} beats ${ROCK}, the computer wins!`, S: `${ROCK} beats ${SCISSORS}, you win!` },
+    P: { P: "It's a tie!", S: `${SCISSORS} beats ${PAPER}, the computer wins!`, R: `${PAPER} beats ${ROCK}, you win!` },
+    S: { S: "It's a tie!", R: `${ROCK} beats ${SCISSORS}, the computer wins!`, P: `${SCISSORS} beats ${PAPER}, you win!` },
+};
+
 function getRandomInt(n) {
     return Math.floor(n * Math.random());
 }
 
 function getComputerChoice() {
-    let choices = ['R', 'P', 'S'];
+    const choices = ['R', 'P', 'S'];
     return choices[getRandomInt(3)];
 }
 
 function getHumanChoice(currentRound, totalRounds) {
-    let humanChoice = prompt(`Round ${currentRound}/${totalRounds}: Choose 🪨Rock (R), 📄Paper (P) or ✂️Scissors (S)`);
+    const humanChoice = prompt(`Round ${currentRound}/${totalRounds}: Choose ${ROCK} (R), ${PAPER} (P) or ${SCISSORS} (S)`);
     return humanChoice;
 }
 
 function playRound(humanChoice, computerChoice, currentRound, totalRounds) {
     const mapChoice = {
-        'R': "🪨Rock",
-        'P': "📄Paper",
-        'S': "✂️Scissors"
+        'R': ROCK,
+        'P': PAPER,
+        'S': SCISSORS
     };
 
-    humanChoice = humanChoice.toUpperCase()
+    humanChoice = humanChoice.toUpperCase();
 
     if (mapChoice[humanChoice] === undefined) {
-        window.alert("You must enter R for 🪨Rock, P for 📄Paper or S for ✂️Scissors!");
+        window.alert(`You must enter R for ${ROCK}, P for ${PAPER}, or S for ${SCISSORS}!`);
         return true;
     } else {
         console.log(`--- Round ${currentRound} of ${totalRounds}: ---`);
         console.log(`You chose ${mapChoice[humanChoice]}`);
         console.log(`The computer chose ${mapChoice[computerChoice]}`);
 
-        if (humanChoice === 'R') {
-            if (computerChoice === 'R') {
-                console.log("It's a tie!");
-            } else if (computerChoice === 'P') {
-                console.log("📄Paper beats 🪨Rock, the computer wins!");
-                computerScore += 1;
-            } else {
-                console.log("🪨Rock beats ✂️Scissors, you win!");
-                playerScore += 1;
-            }
-        } else if (humanChoice === 'P') {
-            if (computerChoice === 'P') {
-                console.log("It's a tie!");
-            } else if (computerChoice === 'S') {
-                console.log("✂️Scissors beats Paper, the computer wins!");
-                computerScore += 1;
-            } else {
-                console.log("📄Paper beats 🪨Rock, you win!");
-                playerScore += 1;
-            }
-        } else {
-            if (computerChoice === 'S') {
-                console.log("It's a tie!");
-            } else if (computerChoice === 'R') {
-                console.log("🪨Rock beats ✂️Scissors, the computer wins!");
-                computerScore += 1;
-            } else {
-                console.log("✂️Scissors beats 📄Paper, you win!");
-                playerScore += 1;
-            }
+        console.log(gameRules[humanChoice][computerChoice]);
+
+        if (gameRules[humanChoice][computerChoice].includes("computer wins")) {
+            computerScore += 1;
+        } else if (gameRules[humanChoice][computerChoice].includes("you win")) {
+            playerScore += 1;
         }
+
         return false;
     }
 }
 
 function playGame(rounds = 5) {
     for (let i = 0; i < rounds; i++) {
-        let computerSelected = getComputerChoice();
-        let humanSelected = getHumanChoice(i + 1, rounds);
+        const computerSelected = getComputerChoice();
+        const humanSelected = getHumanChoice(i + 1, rounds);
 
-        let repeat = playRound(humanSelected, computerSelected, i + 1, rounds);
+        const repeat = playRound(humanSelected, computerSelected, i + 1, rounds);
 
-        if (repeat)
-            i -= 1;
+        if (repeat) i -= 1;
     }
     console.log(`--- You won ${playerScore} rounds and the computer won ${computerScore} ---`);
     if (playerScore > computerScore) {
