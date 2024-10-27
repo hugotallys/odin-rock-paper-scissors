@@ -8,6 +8,8 @@ const gameRules = {
     [SCISSORS]: { [SCISSORS]: "It's a tie!", [ROCK]: `${ROCK} beats ${SCISSORS}, the computer wins this round!`, [PAPER]: `${SCISSORS} beats ${PAPER}, you win this round!` },
 };
 
+const WINNER_SCORE = 5;
+
 function getRandomInt(n) {
     return Math.floor(n * Math.random());
 }
@@ -29,6 +31,7 @@ function playRound(humanChoice, computerChoice) {
 
 let playerScore = 0;
 let computerScore = 0;
+let hasWinner = false;
 
 const rockButton = document.querySelector("#rock-btn");
 const paperButton = document.querySelector("#paper-btn");
@@ -39,8 +42,23 @@ const contentDiv = document.querySelector("#content");
 const playerScoreDiv = document.querySelector("#player-score");
 const computerScoreDiv = document.querySelector("#computer-score");
 
+function cleanUp() {
+    contentDiv.removeChild(contentDiv.lastElementChild);
+    contentDiv.removeChild(contentDiv.lastElementChild);
+
+    playerScore = 0;
+    computerScore = 0;
+
+    playerScoreDiv.innerText = `Player Score ${playerScore}`;
+    computerScoreDiv.innerText = `Computer Score ${computerScore}`;
+
+    hasWinner = false;
+}
+
 [rockButton, paperButton, scissorsButton].forEach((btn) => {
     btn.addEventListener("click", (e) => {
+        if (hasWinner) return;
+
         const humanSelected = e.target.innerText;
         const computerSelected = getComputerChoice();
 
@@ -51,12 +69,13 @@ const computerScoreDiv = document.querySelector("#computer-score");
         const choiceP = document.createElement("p");
         choiceP.innerText = `${humanSelected} (Player) VS ${computerSelected} (Computer)`;
         choiceP.style["text-align"] = "center";
+        choiceDiv.appendChild(choiceP);
 
         const resultP = document.createElement("p");
+
         resultP.innerText = gameRules[humanSelected][computerSelected];
         resultP.style["text-align"] = "center";
 
-        choiceDiv.appendChild(choiceP);
         choiceDiv.appendChild(resultP);
 
         if (contentDiv.childElementCount > 2) {
@@ -67,5 +86,29 @@ const computerScoreDiv = document.querySelector("#computer-score");
 
         playerScoreDiv.innerText = `Player Score ${playerScore}`;
         computerScoreDiv.innerText = `Computer Score ${computerScore}`;
+
+        if (playerScore === WINNER_SCORE || computerScore === WINNER_SCORE) {
+            const winnerDiv = document.createElement("div");
+            const winnerP = document.createElement("p");
+            const resetButton = document.createElement("button");
+
+            if (playerScore === WINNER_SCORE) {
+                winnerP.innerText = "🎉 Congratulations, you won! 🎉";
+            } else {
+                winnerP.innerText = "😞 The computer won, maybe next time... 😞"
+            }
+
+            resetButton.innerText = "Play Again";
+            resetButton.onclick = () => cleanUp();
+
+            winnerDiv.style["text-align"] = "center";
+
+            winnerDiv.appendChild(winnerP);
+            winnerDiv.appendChild(resetButton);
+
+            contentDiv.appendChild(winnerDiv);
+
+            hasWinner = true;
+        }
     });
 });
