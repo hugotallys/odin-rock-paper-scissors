@@ -1,2 +1,5 @@
 # odin-rock-paper-scissors
-Odin Rock Paper Scissors Project
+
+The Odin Project 🪨Rock 📄Paper ✂️Scissors game.
+
+Live preview [here](https://hugotallys.github.io/odin-rock-paper-scissors/).
