@@ -35,6 +35,7 @@ body {
     display: flex;
     justify-content: space-between;
     gap: 16px;
+    flex-wrap: wrap;
 }
 
 .buttons-container {
@@ -42,6 +43,7 @@ body {
     justify-content: space-between;
     gap: 16px;
     margin: 16px;
+    flex-wrap: wrap;
 }
 
 #player-score,
